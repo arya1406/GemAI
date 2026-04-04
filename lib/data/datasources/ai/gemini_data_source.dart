@@ -4,9 +4,19 @@ import '../../../core/error/exceptions.dart';
 import '../../models/chat_message_model.dart';
 import 'ai_data_source.dart';
 
-/// Gemini implementation of [AiDataSource].
+/// Gemini API implementation of [AiDataSource].
+///
+/// Used as an online fallback when the on-device Gemma model is
+/// unavailable. Requires a valid API key injected via `--dart-define`.
 class GeminiDataSource implements AiDataSource {
   GeminiDataSource({required GenerativeModel model}) : _model = model;
+
+  /// Convenience factory that creates the [GenerativeModel] from an API key.
+  factory GeminiDataSource.fromApiKey(String apiKey) {
+    return GeminiDataSource(
+      model: GenerativeModel(model: 'gemini-1.5-flash', apiKey: apiKey),
+    );
+  }
 
   final GenerativeModel _model;
 

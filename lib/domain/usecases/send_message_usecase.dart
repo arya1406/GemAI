@@ -7,12 +7,16 @@ class SendMessageUseCase {
 
   final ChatRepository _repository;
 
+  /// Sends a message with [content] and optional [imagePath] in the
+  /// conversation identified by [conversationId].
   Future<ChatMessage> call({
     required int conversationId,
     required String content,
+    String? imagePath,
   }) =>
       _repository.sendMessage(
         conversationId: conversationId,
         content: content,
+        imagePath: imagePath,
       );
 }

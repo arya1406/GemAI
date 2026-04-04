@@ -1,48 +1,52 @@
 name: gem_ai
-description: Offline-first AI assistant powered by Gemini.
-publish_to: 'none'
-
+description: AI assistant for you and you alone, no personal data is collected, no chats are collected. Just you and GemAI.
+publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.3.0 <4.0.0'
+  sdk: ">=3.2.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  # State management
-  flutter_riverpod: ^2.5.1
-  riverpod_annotation: ^2.3.5
+  # --- UI & Utilities ---
+  cupertino_icons: ^1.0.8
+  flutter_markdown_plus: ^1.0.7 # To render AI text formatting (bold, lists, code blocks)
+  shared_preferences: ^2.2.3 # To store lightweight settings like device theme preferences
+  uuid: ^4.5.1 # For generating unique identifiers
+  smooth_page_indicator: ^2.0.1 # For onboarding page dots
+  animated_text_kit: ^4.2.2 # Typing animation for AI responses
+  permission_handler: ^12.0.1 # For camera and microphone permissions
 
-  # Database
-  drift: ^2.18.0
-  sqlite3_flutter_libs: ^0.5.24
-  path_provider: ^2.1.3
+  # --- State Management (Riverpod) ---
+  flutter_riverpod: ^3.3.1
+
+  # --- Local Database (Drift) ---
+  drift: ^2.32.1
+  sqlite3_flutter_libs: ^0.6.0+eol # Required to run SQLite on Android/iOS
+  path_provider: ^2.1.3 # To locate safe directory paths on the device
   path: ^1.9.0
+  sqlite3: ^3.2.0
 
-  # AI
-  google_generative_ai: ^0.4.3
-
-  # Utils
-  freezed_annotation: ^2.4.1
-  json_annotation: ^4.9.0
-  uuid: ^4.4.0
+  # --- AI & Media Inputs (Photo & Voice) ---
+  image_picker: ^1.1.0 # To pick photos from the gallery or camera
+  speech_to_text: ^7.3.0 # For real-time voice transcription
+  google_generative_ai: ^0.4.6 # Online fallback via Gemini API
+  flutter_gemma: ^0.13.0 # On-device Gemma inference via MediaPipe GenAI
+  device_info_plus: ^12.4.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_lints: ^6.0.0
 
-  flutter_lints: ^3.0.0
-
-  # Code generation
+  # --- Code Generators (Required for Drift) ---
   build_runner: ^2.4.9
-  drift_dev: ^2.18.0
-  riverpod_generator: ^2.4.3
-  freezed: ^2.5.2
-  json_serializable: ^6.8.0
-  custom_lint: ^0.6.4
-  riverpod_lint: ^2.3.10
+  drift_dev: ^2.32.1
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/models/ # This folder will be used later to store the offline Gemma 4 models
+    - assets/images/ # App logo and onboarding illustrations

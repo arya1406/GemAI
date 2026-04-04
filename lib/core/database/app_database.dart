@@ -5,8 +5,6 @@ import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
 import '../constants/app_constants.dart';
 import 'tables/chat_messages_table.dart';
 import 'tables/conversations_table.dart';

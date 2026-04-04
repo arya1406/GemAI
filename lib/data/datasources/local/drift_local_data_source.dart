@@ -8,6 +8,9 @@ import '../../models/conversation_model.dart';
 import 'local_data_source.dart';
 
 /// Drift implementation of [LocalDataSource].
+///
+/// Translates between [ChatMessageModel]/[ConversationModel] data objects
+/// and the underlying SQLite tables managed by [AppDatabase].
 class DriftLocalDataSource implements LocalDataSource {
   DriftLocalDataSource({required AppDatabase database}) : _db = database;
 
@@ -20,7 +23,9 @@ class DriftLocalDataSource implements LocalDataSource {
   @override
   Future<List<ConversationModel>> getConversations() async {
     try {
-      final rows = await _db.select(_db.conversations).get();
+      final rows = await (_db.select(_db.conversations)
+            ..orderBy([(t) => OrderingTerm.desc(t.updatedAt)]))
+          .get();
       return rows.map(ConversationModel.fromDrift).toList();
     } catch (e) {
       throw app_exceptions.DatabaseException(e.toString());
@@ -43,10 +48,27 @@ class DriftLocalDataSource implements LocalDataSource {
   }
 
   @override
+  Future<void> updateConversationTitle(int id, String title) async {
+    try {
+      await (_db.update(_db.conversations)..where((t) => t.id.equals(id)))
+          .write(ConversationsCompanion(
+        title: Value(title),
+        updatedAt: Value(DateTime.now()),
+      ),);
+
+    } catch (e) {
+      throw app_exceptions.DatabaseException(e.toString());
+    }
+  }
+
+  @override
   Future<void> deleteConversation(int id) async {
     try {
-      await (_db.delete(_db.conversations)
-            ..where((t) => t.id.equals(id)))
+      // Delete messages first (cascade), then the conversation.
+      await (_db.delete(_db.chatMessages)
+            ..where((t) => t.conversationId.equals(id)))
+          .go();
+      await (_db.delete(_db.conversations)..where((t) => t.id.equals(id)))
           .go();
     } catch (e) {
       throw app_exceptions.DatabaseException(e.toString());
@@ -77,12 +99,20 @@ class DriftLocalDataSource implements LocalDataSource {
             ChatMessagesCompanion.insert(
               conversationId: message.conversationId,
               role: MessageRole.values.byName(message.role),
+              messageType: Value(MessageType.values.byName(message.messageType)),
               content: message.content,
+              imagePath: Value(message.imagePath),
             ),
           );
       final row = await (_db.select(_db.chatMessages)
             ..where((t) => t.id.equals(id)))
           .getSingle();
+
+      // Also touch the conversation's updatedAt timestamp.
+      await (_db.update(_db.conversations)
+            ..where((t) => t.id.equals(message.conversationId)))
+          .write(ConversationsCompanion(updatedAt: Value(DateTime.now())));
+
       return ChatMessageModel.fromDrift(row);
     } catch (e) {
       throw app_exceptions.DatabaseException(e.toString());
