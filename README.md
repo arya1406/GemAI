@@ -9,7 +9,7 @@
 <br/>
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.2%2B-02569B?style=flat-square&logo=flutter&logoColor=white)](https://flutter.dev)
-[![Gemma](https://img.shields.io/badge/Gemma-3%201B%20INT4-4285F4?style=flat-square&logo=google&logoColor=white)](https://ai.google.dev/gemma)
+[![Gemma](https://img.shields.io/badge/Gemma-4%20E2B%20%7C%20E4B-4285F4?style=flat-square&logo=google&logoColor=white)](https://ai.google.dev/gemma)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20iOS-lightgrey?style=flat-square)](https://flutter.dev)
 
@@ -19,7 +19,7 @@
 
 ## What is GemAI?
 
-GemAI is a **privacy-first, offline AI assistant** built with Flutter. It runs Google's Gemma model entirely on your device — no internet required, no servers involved, no data ever leaving your hands. Everything stays local. Everything stays yours.
+GemAI is a **privacy-first, fully offline AI assistant** built with Flutter. It runs Google's latest **Gemma 4** models entirely on your device — no internet required, no API calls, no servers involved, no data ever leaving your hands. Everything stays local. Everything stays yours.
 
 Think of it as a personal AI that genuinely respects you.
 
@@ -27,17 +27,17 @@ Think of it as a personal AI that genuinely respects you.
 
 ## Features
 
-| Feature                  | Details                                                               |
-| ------------------------ | --------------------------------------------------------------------- |
-| **On-Device AI**         | Powered by Gemma 3 1B-IT (INT4) via MediaPipe — runs fully offline    |
-| **Private by Design**    | Zero telemetry, zero data collection, zero cloud dependency           |
-| **Voice Input**          | Speak naturally — real-time speech-to-text transcription              |
-| **Image Input**          | Pick photos from your gallery or camera and chat about them           |
-| **Markdown Responses**   | AI replies render with rich formatting — bold, lists, and code blocks |
-| **Conversation History** | Chats are stored locally with Drift (SQLite) — searchable, persistent |
-| **Online Fallback**      | Optionally switch to Gemini API when you need more capability         |
-| **Onboarding Flow**      | Smooth first-launch experience with model setup guidance              |
-| **Theme Support**        | Light, Dark, and System-adaptive themes                               |
+| Feature                  | Details                                                                         |
+| ------------------------ | ------------------------------------------------------------------------------- |
+| **On-Device AI**         | Powered by **Gemma 4 E2B & E4B** via MediaPipe — fully offline, zero API calls  |
+| **Adaptive Model Tiers** | Gemma 4 E4B for flagship devices, E2B for mid-range; Gemma 3 1B for entry-level |
+| **Private by Design**    | Zero telemetry, zero data collection, zero cloud dependency                     |
+| **Voice Input**          | Speak naturally — real-time speech-to-text transcription                        |
+| **Image Input**          | Pick photos from your gallery or camera and chat about them                     |
+| **Markdown Responses**   | AI replies render with rich formatting — bold, lists, and code blocks           |
+| **Conversation History** | Chats are stored locally with Drift (SQLite) — searchable, persistent           |
+| **Onboarding Flow**      | Smooth first-launch experience with model download guidance                     |
+| **Theme Support**        | Light, Dark, and System-adaptive themes                                         |
 
 ---
 
@@ -58,8 +58,7 @@ lib/
 - **UI & Framework** — Flutter (FVM managed, SDK ≥ 3.2.0)
 - **State Management** — Riverpod 3.x
 - **Local Database** — Drift (type-safe SQLite with code generation)
-- **On-Device AI** — `flutter_gemma` (MediaPipe GenAI)
-- **Online AI** — Gemini API via `google_generative_ai`
+- **On-Device AI** — `flutter_gemma` (MediaPipe GenAI) running Gemma 4 E2B / E4B
 - **Voice** — `speech_to_text`
 - **Media** — `image_picker`
 
@@ -71,7 +70,7 @@ lib/
 
 - Flutter SDK ≥ 3.2.0 (or use [FVM](https://fvm.app))
 - Android device/emulator (API 24+) or iOS device (iOS 16+)
-- The Gemma 3 1B-IT INT4 model file (`.task`) placed in `assets/models/`
+- A Gemma 4 model file (`.task`) placed in `assets/models/` — E4B for flagship, E2B for mid-range
 
 ### Setup
 
@@ -90,7 +89,7 @@ dart run build_runner build --delete-conflicting-outputs
 flutter run
 ```
 
-> **Note:** The model file (`gemma3-1b-it-int4.task`) is not included in the repo due to its size. Download it from [Google AI Edge](https://ai.google.dev/edge/mediapipe/solutions/genai/llm_inference) and place it in `assets/models/`.
+> **Note:** Model files are not included in the repo due to their size. Download your preferred Gemma 4 model (E2B or E4B) from [Google AI Edge](https://ai.google.dev/edge/mediapipe/solutions/genai/llm_inference) and place it in `assets/models/`. Gemma 3 1B is also supported for entry-level devices.
 
 ---
 
@@ -106,7 +105,6 @@ The aim is simple: **powerful AI, zero compromise on privacy.** Every feature de
 
 These are the areas being actively explored for future releases:
 
-- [ ] **Multi-model support** — swap between different on-device models
 - [ ] **RAG (Retrieval-Augmented Generation)** — chat with your own documents and notes
 - [ ] **Conversation search** — full-text search across local chat history
 - [ ] **Export & backup** — encrypted local export of conversations
